@@ -52,6 +52,8 @@ data Z3_pattern
 
 data Z3_constructor
 
+data Z3_constructor_list
+
 data Z3_model
 
 data Z3_func_interp
@@ -72,6 +74,30 @@ z3_l_true, z3_l_false, z3_l_undef :: Z3_lbool
 z3_l_true  = Z3_lbool (#const Z3_L_TRUE)
 z3_l_false = Z3_lbool (#const Z3_L_FALSE)
 z3_l_undef = Z3_lbool (#const Z3_L_UNDEF)
+
+type Z3_symbol_kind = CInt
+#{enum Z3_symbol_kind,
+   , z3_int_symbol = Z3_INT_SYMBOL
+   , z3_string_symbol = Z3_STRING_SYMBOL
+   }
+
+type Z3_sort_kind = CInt
+#{enum Z3_sort_kind,
+   , z3_uninterpreted_sort = Z3_UNINTERPRETED_SORT
+   , z3_bool_sort = Z3_BOOL_SORT
+   , z3_int_sort = Z3_INT_SORT
+   , z3_real_sort = Z3_REAL_SORT
+   , z3_bv_sort = Z3_BV_SORT
+   , z3_array_sort = Z3_ARRAY_SORT
+   , z3_datatype_sort = Z3_DATATYPE_SORT
+   , z3_relation_sort = Z3_RELATION_SORT
+   , z3_finite_domain_sort = Z3_FINITE_DOMAIN_SORT
+   , z3_floating_point_sort = Z3_FLOATING_POINT_SORT
+   , z3_rounding_mode_sort = Z3_ROUNDING_MODE_SORT
+   , z3_seq_sort = Z3_SEQ_SORT
+   , z3_re_sort = Z3_RE_SORT
+   , z3_unknown_sort = Z3_UNKNOWN_SORT
+   }
 
 -- | Reference: <http://research.microsoft.com/en-us/um/redmond/projects/z3/group__capi.html#ga3a65ded0ada3ee285865759a21140eeb>
 newtype Z3_bool = Z3_bool CInt
@@ -185,9 +211,9 @@ foreign import ccall unsafe "Z3_mk_string_symbol"
 ---------------------------------------------------------------------
 -- * Sorts
 
--- | Reference: <http://research.microsoft.com/en-us/um/redmond/projects/z3/group__capi.html#ga57c27f2c4e9eccf17072a84c6cecb1db>
-foreign import ccall unsafe "Z3_sort_to_ast"
-    z3_sort_to_ast :: Ptr Z3_context -> Ptr Z3_sort -> IO (Ptr Z3_ast)
+-- -- | Reference: <http://research.microsoft.com/en-us/um/redmond/projects/z3/group__capi.html#ga57c27f2c4e9eccf17072a84c6cecb1db>
+-- foreign import ccall unsafe "Z3_sort_to_ast"
+--     z3_sort_to_ast :: Ptr Z3_context -> Ptr Z3_sort -> IO (Ptr Z3_ast)
 
 -- TODO Sorts: Z3_is_eq_sort
 
@@ -226,6 +252,18 @@ foreign import ccall unsafe "Z3_mk_tuple_sort"
                      -> Ptr (Ptr Z3_func_decl)
                      -> IO (Ptr Z3_sort)
 
+foreign import ccall unsafe "Z3_mk_list_sort"
+    z3_mk_list_sort :: Ptr Z3_context
+                    -> Ptr Z3_symbol
+                    -> Ptr Z3_sort
+                    -> Ptr (Ptr Z3_func_decl)
+                    -> Ptr (Ptr Z3_func_decl)
+                    -> Ptr (Ptr Z3_func_decl)
+                    -> Ptr (Ptr Z3_func_decl)
+                    -> Ptr (Ptr Z3_func_decl)
+                    -> Ptr (Ptr Z3_func_decl)
+                    -> IO (Ptr Z3_sort)
+
 -- Reference <http://research.microsoft.com/en-us/um/redmond/projects/z3/group__capi.html#gaa779e39f7050b9d51857887954b5f9b0>
 foreign import ccall unsafe "Z3_mk_constructor"
     z3_mk_constructor :: Ptr Z3_context
@@ -249,6 +287,32 @@ foreign import ccall unsafe "Z3_mk_datatype"
                    -> CUInt
                    -> Ptr (Ptr Z3_constructor)
                    -> IO (Ptr Z3_sort)
+
+foreign import ccall unsafe "Z3_mk_constructor_list"
+    z3_mk_constructor_list :: Ptr Z3_context
+                           -> CUInt
+                           -> Ptr (Ptr Z3_constructor)
+                           -> IO (Ptr Z3_constructor_list)
+
+foreign import ccall unsafe "Z3_del_constructor_list"
+    z3_del_constructor_list :: Ptr Z3_context -> Ptr Z3_constructor_list -> IO ()
+
+foreign import ccall unsafe "Z3_mk_datatypes"
+    z3_mk_datatypes :: Ptr Z3_context
+                    -> CUInt
+                    -> Ptr (Ptr Z3_symbol)
+                    -> Ptr (Ptr Z3_sort)
+                    -> Ptr (Ptr Z3_constructor_list)
+                    -> IO ()
+
+foreign import ccall unsafe "Z3_query_constructor"
+    z3_query_constructor :: Ptr Z3_context
+                         -> Ptr Z3_constructor
+                         -> CUInt
+                         -> Ptr (Ptr Z3_func_decl)
+                         -> Ptr (Ptr Z3_func_decl)
+                         -> Ptr (Ptr Z3_func_decl)
+                         -> IO ()
                    
 -- | Reference: <http://research.microsoft.com/en-us/um/redmond/projects/z3/group__capi.html#ga6865879523e7e882d7e50a2d8445ac8b>
 foreign import ccall unsafe "Z3_mk_set_sort"
@@ -370,6 +434,9 @@ foreign import ccall unsafe "Z3_mk_mod"
 -- | Reference: <http://research.microsoft.com/en-us/um/redmond/projects/z3/group__capi.html#ga2fcdb17f9039bbdaddf8a30d037bd9ff>
 foreign import ccall unsafe "Z3_mk_rem"
     z3_mk_rem :: Ptr Z3_context -> Ptr Z3_ast -> Ptr Z3_ast ->  IO (Ptr Z3_ast)
+
+foreign import ccall unsafe "Z3_mk_power"
+    z3_mk_power :: Ptr Z3_context -> Ptr Z3_ast -> Ptr Z3_ast -> IO (Ptr Z3_ast)
 
 -- | Reference: <http://research.microsoft.com/en-us/um/redmond/projects/z3/group__capi.html#ga58a3dc67c5de52cf599c346803ba1534>
 foreign import ccall unsafe "Z3_mk_lt"
@@ -688,6 +755,90 @@ foreign import ccall unsafe "Z3_mk_unsigned_int64"
     z3_mk_unsigned_int64 :: Ptr Z3_context -> CULLong -> Ptr Z3_sort ->  IO (Ptr Z3_ast)
 
 ---------------------------------------------------------------------
+-- * Sequences and regular expressions
+
+foreign import ccall unsafe "Z3_mk_seq_sort"
+    z3_mk_seq_sort :: Ptr Z3_context -> Ptr Z3_sort -> IO (Ptr Z3_sort)
+
+foreign import ccall unsafe "Z3_is_seq_sort"
+    z3_is_seq_sort :: Ptr Z3_context -> Ptr Z3_sort -> IO Z3_bool
+
+foreign import ccall unsafe "Z3_mk_re_sort"
+    z3_mk_re_sort :: Ptr Z3_context -> Ptr Z3_sort -> IO (Ptr Z3_sort)
+
+foreign import ccall unsafe "Z3_is_re_sort"
+    z3_is_re_sort :: Ptr Z3_context -> Ptr Z3_sort -> IO Z3_bool
+
+foreign import ccall unsafe "Z3_mk_string_sort"
+    z3_mk_string_sort :: Ptr Z3_context -> IO (Ptr Z3_sort)
+
+foreign import ccall unsafe "Z3_is_string_sort"
+    z3_is_string_sort :: Ptr Z3_context -> Ptr Z3_sort -> IO Z3_bool
+
+foreign import ccall unsafe "Z3_mk_string"
+    z3_mk_string :: Ptr Z3_context -> Z3_string -> IO (Ptr Z3_ast)
+
+foreign import ccall unsafe "Z3_is_string"
+    z3_is_string :: Ptr Z3_context -> Ptr Z3_ast -> IO Z3_bool
+
+foreign import ccall unsafe "Z3_get_string"
+    z3_get_string :: Ptr Z3_context -> Ptr Z3_ast -> IO Z3_string
+
+foreign import ccall unsafe "Z3_mk_seq_empty"
+    z3_mk_seq_empty :: Ptr Z3_context -> Ptr Z3_sort -> IO (Ptr Z3_ast)
+
+foreign import ccall unsafe "Z3_mk_seq_unit"
+    z3_mk_seq_unit :: Ptr Z3_context -> Ptr Z3_ast -> IO (Ptr Z3_ast)
+
+foreign import ccall unsafe "Z3_mk_seq_concat"
+    z3_mk_seq_concat :: Ptr Z3_context -> CUInt -> Ptr (Ptr Z3_ast) -> IO (Ptr Z3_ast)
+
+foreign import ccall unsafe "Z3_mk_seq_prefix"
+    z3_mk_seq_prefix :: Ptr Z3_context -> Ptr Z3_ast -> Ptr Z3_ast -> IO (Ptr Z3_ast)
+
+foreign import ccall unsafe "Z3_mk_seq_suffix"
+    z3_mk_seq_suffix :: Ptr Z3_context -> Ptr Z3_ast -> Ptr Z3_ast -> IO (Ptr Z3_ast)
+
+foreign import ccall unsafe "Z3_mk_seq_contains"
+    z3_mk_seq_contains :: Ptr Z3_context -> Ptr Z3_ast -> Ptr Z3_ast -> IO (Ptr Z3_ast)
+
+foreign import ccall unsafe "Z3_mk_seq_extract"
+    z3_mk_seq_extract :: Ptr Z3_context -> Ptr Z3_ast -> Ptr Z3_ast -> Ptr Z3_ast -> IO (Ptr Z3_ast)
+
+foreign import ccall unsafe "Z3_mk_seq_replace"
+    z3_mk_seq_replace :: Ptr Z3_context -> Ptr Z3_ast -> Ptr Z3_ast -> Ptr Z3_ast -> IO (Ptr Z3_ast)
+
+foreign import ccall unsafe "Z3_mk_seq_at"
+    z3_mk_seq_at :: Ptr Z3_context -> Ptr Z3_ast -> Ptr Z3_ast -> IO (Ptr Z3_ast)
+
+foreign import ccall unsafe "Z3_mk_seq_length"
+    z3_mk_seq_length :: Ptr Z3_context -> Ptr Z3_ast -> IO (Ptr Z3_ast)
+
+foreign import ccall unsafe "Z3_mk_seq_index"
+    z3_mk_seq_index :: Ptr Z3_context -> Ptr Z3_ast -> Ptr Z3_ast -> Ptr Z3_ast -> IO (Ptr Z3_ast)
+
+foreign import ccall unsafe "Z3_mk_seq_to_re"
+    z3_mk_seq_to_re :: Ptr Z3_context -> Ptr Z3_ast -> IO (Ptr Z3_ast)
+
+foreign import ccall unsafe "Z3_mk_seq_in_re"
+    z3_mk_seq_in_re :: Ptr Z3_context -> Ptr Z3_ast -> Ptr Z3_ast -> IO (Ptr Z3_ast)
+
+foreign import ccall unsafe "Z3_mk_re_plus"
+    z3_mk_re_plus :: Ptr Z3_context -> Ptr Z3_ast -> IO (Ptr Z3_ast)
+
+foreign import ccall unsafe "Z3_mk_re_star"
+    z3_mk_re_star :: Ptr Z3_context -> Ptr Z3_ast -> IO (Ptr Z3_ast)
+
+foreign import ccall unsafe "Z3_mk_re_option"
+    z3_mk_re_option :: Ptr Z3_context -> Ptr Z3_ast -> IO (Ptr Z3_ast)
+
+foreign import ccall unsafe "Z3_mk_re_union"
+    z3_mk_re_union :: Ptr Z3_context -> CUInt -> Ptr (Ptr Z3_ast) -> IO (Ptr Z3_ast)
+
+foreign import ccall unsafe "Z3_mk_re_concat"
+    z3_mk_re_concat :: Ptr Z3_context -> CUInt -> Ptr (Ptr Z3_ast) -> IO (Ptr Z3_ast)
+
+---------------------------------------------------------------------
 -- * Quantifiers
 
 -- | Reference: <http://research.microsoft.com/en-us/um/redmond/projects/z3/group__capi.html#gaf15c95b66dc3b0af735774ee401a6f85>
@@ -742,6 +893,66 @@ foreign import ccall unsafe "Z3_mk_exists_const"
 
 ---------------------------------------------------------------------
 -- * Accessors
+
+foreign import ccall unsafe "Z3_get_symbol_kind"
+    z3_get_symbol_kind :: Ptr Z3_context -> Ptr Z3_symbol -> IO (Ptr Z3_symbol_kind)
+
+foreign import ccall unsafe "Z3_get_symbol_int"
+    z3_get_symbol_int :: Ptr Z3_context -> Ptr Z3_symbol -> IO CInt
+
+-- foreign import ccall unsafe "Z3_get_symbol_string"
+--     z3_get_symbol_string :: Ptr Z3_context -> Ptr Z3_symbol -> IO Z3_string
+
+foreign import ccall unsafe "Z3_get_sort_name"
+    z3_get_sort_name :: Ptr Z3_context -> Ptr Z3_sort -> IO (Ptr Z3_symbol)
+
+foreign import ccall unsafe "Z3_get_sort_id"
+    z3_get_sort_id :: Ptr Z3_context -> Ptr Z3_sort -> IO CUInt
+
+foreign import ccall unsafe "Z3_sort_to_ast"
+    z3_sort_to_ast :: Ptr Z3_context -> Ptr Z3_sort -> IO (Ptr Z3_ast)
+
+foreign import ccall unsafe "Z3_is_eq_sort"
+    z3_is_eq_sort :: Ptr Z3_context -> Ptr Z3_sort -> Ptr Z3_sort -> IO Z3_bool
+
+foreign import ccall unsafe "Z3_get_sort_kind"
+    z3_get_sort_kind :: Ptr Z3_context -> Ptr Z3_sort -> IO Z3_sort_kind
+
+-- foreign import ccall unsafe "Z3_get_bv_sort_size"
+--     z3_get_bv_sort_size :: Ptr Z3_context -> Ptr Z3_sort -> IO CUInt
+
+foreign import ccall unsafe "Z3_get_finite_domain_sort_size"
+    z3_get_finite_domain_sort_size :: Ptr Z3_context -> Ptr Z3_sort -> Ptr CUInt -> IO Z3_bool
+
+foreign import ccall unsafe "Z3_get_array_sort_domain"
+    z3_get_array_sort_domain :: Ptr Z3_context -> Ptr Z3_sort -> IO (Ptr Z3_sort)
+
+foreign import ccall unsafe "Z3_get_array_sort_range"
+    z3_get_array_sort_range :: Ptr Z3_context -> Ptr Z3_sort -> IO (Ptr Z3_sort)
+
+foreign import ccall unsafe "Z3_get_tuple_sort_mk_decl"
+    z3_get_tuple_sort_mk_decl :: Ptr Z3_context -> Ptr Z3_sort -> IO (Ptr Z3_func_decl)
+
+foreign import ccall unsafe "Z3_get_tuple_sort_num_fields"
+    z3_get_tuple_sort_num_fields :: Ptr Z3_context -> Ptr Z3_sort -> IO CUInt
+
+foreign import ccall unsafe "Z3_get_tuple_sort_field_decl"
+    z3_get_tuple_sort_field_decl :: Ptr Z3_context -> Ptr Z3_sort -> CUInt -> IO (Ptr Z3_func_decl)
+
+-- foreign import ccall unsafe "Z3_get_datatype_sort_num_constructors"
+--     z3_get_datatype_sort_num_constructors :: Ptr Z3_context -> Ptr Z3_sort -> IO CUInt
+
+-- foreign import ccall unsafe "Z3_get_datatype_sort_constructor"
+--     z3_get_datatype_sort_constructor :: Ptr Z3_context -> Ptr Z3_sort -> CUInt -> IO (Ptr Z3_func_decl)
+
+-- foreign import ccall unsafe "Z3_get_datatype_sort_recognizer"
+--     z3_get_datatype_sort_recognizer :: Ptr Z3_context -> Ptr Z3_sort -> CUInt -> IO (Ptr Z3_func_decl)
+
+-- foreign import ccall unsafe "Z3_get_datatype_sort_constructor_accessor"
+--     z3_get_datatype_sort_constructor_accessor :: Ptr Z3_context -> Ptr Z3_sort -> CUInt -> CUInt -> IO (Ptr Z3_func_dec)
+
+foreign import ccall unsafe "Z3_datatype_update_field"
+    z3_datatype_update_field :: Ptr Z3_context -> Ptr Z3_func_decl -> Ptr Z3_ast -> Ptr Z3_ast -> IO (Ptr Z3_ast)
 
 -- | Reference: <http://research.microsoft.com/en-us/um/redmond/projects/z3/group__capi.html#gadc82da786f3b558de8ded05bf6478902>
 foreign import ccall unsafe "Z3_func_decl_to_ast"
@@ -1193,11 +1404,11 @@ foreign import ccall unsafe "Z3_set_error"
 
 -- | Reference: <http://research.microsoft.com/en-us/um/redmond/projects/z3/group__capi.html#gaf06357c49299efb8a0bdaeb3bc96c6d6>
 foreign import ccall unsafe "Z3_get_error_msg"
-    z3_get_error_msg :: Z3_error_code -> IO Z3_string
+    z3_get_error_msg :: Ptr Z3_context -> Z3_error_code -> IO Z3_string
 
--- | Reference: <http://research.microsoft.com/en-us/um/redmond/projects/z3/group__capi.html#gae0aba52b5738b2ea78e0d6ad67ef1f92>
-foreign import ccall unsafe "Z3_get_error_msg_ex"
-    z3_get_error_msg_ex :: Ptr Z3_context -> Z3_error_code -> IO Z3_string
+-- -- | Reference: <http://research.microsoft.com/en-us/um/redmond/projects/z3/group__capi.html#gae0aba52b5738b2ea78e0d6ad67ef1f92>
+-- foreign import ccall unsafe "Z3_get_error_msg_ex"
+--     z3_get_error_msg_ex :: Ptr Z3_context -> Z3_error_code -> IO Z3_string
 
 ---------------------------------------------------------------------
 -- * Miscellaneous

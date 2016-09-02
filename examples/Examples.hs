@@ -1,15 +1,16 @@
 
 module Main where
 
-import qualified Example.Monad.Queens4
-import qualified Example.Monad.Queens4All
 import qualified Example.Monad.DataTypes
 import qualified Example.Monad.FuncModel
+import qualified Example.Monad.Interpolation
+import qualified Example.Monad.Queens4
+import qualified Example.Monad.Queens4All
+import qualified Example.Monad.String
 import qualified Example.Monad.ToSMTLib
 import qualified Example.Monad.Tuple
-import qualified Example.Monad.Interpolation
 
-import System.Environment
+import           System.Environment
 
 examples =
   [ ("4queens"
@@ -32,6 +33,9 @@ examples =
     )
   , ("interpolation"
     , Example.Monad.Interpolation.run
+    )
+  , ("string"
+    , Example.Monad.String.run
     )
   ]
 

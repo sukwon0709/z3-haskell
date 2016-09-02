@@ -204,6 +204,33 @@ module Z3.Monad
   , mkBitvector
   , mkBvNum
 
+  -- * Sequences and Strings
+  , mkSeqSort
+  , isSeqSort
+  , mkReSort
+  , isReSort
+  , mkStringSort
+  , mkString
+  , isStringSort
+  , getString
+  , mkSeqEmpty
+  , mkSeqUnit
+  , mkSeqConcat
+  , mkSeqPrefix
+  , mkSeqSuffix
+  , mkSeqContains
+  , mkSeqReplace
+  , mkSeqAt
+  , mkSeqLength
+  , mkSeqIndex
+  , mkSeqToRe
+  , mkSeqInRe
+  , mkRePlus
+  , mkReStar
+  , mkReOption
+  , mkReUnion
+  , mkReConcat
+
   -- * Quantifiers
   , mkPattern
   , mkBound
@@ -323,38 +350,23 @@ module Z3.Monad
   )
   where
 
-import Z3.Opts
-import Z3.Base
-  ( Symbol
-  , AST
-  , Sort
-  , FuncDecl
-  , App
-  , Pattern
-  , Constructor
-  , Model
-  , FuncInterp
-  , FuncEntry
-  , FuncModel(..)
-  , Result(..)
-  , Logic(..)
-  , ASTPrintMode(..)
-  , Version(..)
-  , Params
-  , Solver
-  , ASTKind(..)
-  )
-import qualified Z3.Base as Base
+import           Z3.Base              (AST, ASTKind (..), ASTPrintMode (..),
+                                       App, Constructor, FuncDecl, FuncEntry,
+                                       FuncInterp, FuncModel (..), Logic (..),
+                                       Model, Params, Pattern, Result (..),
+                                       Solver, Sort, Symbol, Version (..))
+import qualified Z3.Base              as Base
+import           Z3.Opts
 
-import Control.Applicative ( Applicative )
-import Data.Fixed ( Fixed, HasResolution )
-import Control.Monad.Reader ( ReaderT, runReaderT, asks )
-import Control.Monad.Trans ( MonadIO, liftIO )
-import Control.Monad.Fix ( MonadFix )
-import Data.Int ( Int64 )
-import Data.Word ( Word, Word64 )
-import Data.Traversable ( Traversable )
-import qualified Data.Traversable as T
+import           Control.Applicative  (Applicative)
+import           Control.Monad.Fix    (MonadFix)
+import           Control.Monad.Reader (ReaderT, asks, runReaderT)
+import           Control.Monad.Trans  (MonadIO, liftIO)
+import           Data.Fixed           (Fixed, HasResolution)
+import           Data.Int             (Int64)
+import           Data.Traversable     (Traversable)
+import qualified Data.Traversable     as T
+import           Data.Word            (Word, Word64)
 
 ---------------------------------------------------------------------
 -- The Z3 monad-class
@@ -1171,7 +1183,7 @@ mkBvmulNoUnderflow = liftFun2 Base.mkBvmulNoUnderflow
 mkSelect :: MonadZ3 z3 => AST -> AST -> z3 AST
 mkSelect = liftFun2 Base.mkSelect
 
--- | Array update.   
+-- | Array update.
 --
 -- Reference: <http://research.microsoft.com/en-us/um/redmond/projects/z3/group__capi.html#gae305a4f54b4a64f7e5973ae6ccb13593>
 mkStore :: MonadZ3 z3 => AST -> AST -> AST -> z3 AST
@@ -1346,6 +1358,84 @@ mkBvNum :: (MonadZ3 z3, Integral i) => Int    -- ^ bit-width
                                     -> i      -- ^ integer value
                                     -> z3 AST
 mkBvNum = liftFun2 Base.mkBvNum
+
+---------------------------------------------------------------------
+-- Sequences and regular expressions
+
+mkSeqSort :: MonadZ3 z3 => Sort -> z3 Sort
+mkSeqSort = liftFun1 Base.mkSeqSort
+
+isSeqSort :: MonadZ3 z3 => Sort -> z3 Bool
+isSeqSort = liftFun1 Base.isSeqSort
+
+mkReSort :: MonadZ3 z3 => Sort -> z3 Sort
+mkReSort = liftFun1 Base.mkReSort
+
+isReSort :: MonadZ3 z3 => Sort -> z3 Bool
+isReSort = liftFun1 Base.isReSort
+
+mkStringSort :: MonadZ3 z3 => z3 Sort
+mkStringSort = liftScalar Base.mkStringSort
+
+mkString :: MonadZ3 z3 => String -> z3 AST
+mkString = liftFun1 Base.mkString
+
+isStringSort :: MonadZ3 z3 => Sort -> z3 Bool
+isStringSort = liftFun1 Base.isStringSort
+
+getString :: MonadZ3 z3 => AST -> z3 String
+getString = liftFun1 Base.getString
+
+mkSeqEmpty :: MonadZ3 z3 => Sort -> z3 AST
+mkSeqEmpty = liftFun1 Base.mkSeqEmpty
+
+mkSeqUnit :: MonadZ3 z3 => AST -> z3 AST
+mkSeqUnit = liftFun1 Base.mkSeqUnit
+
+mkSeqConcat :: MonadZ3 z3 => [AST] -> z3 AST
+mkSeqConcat = liftFun1 Base.mkSeqConcat
+
+mkSeqPrefix :: MonadZ3 z3 => AST -> AST -> z3 AST
+mkSeqPrefix = liftFun2 Base.mkSeqPrefix
+
+mkSeqSuffix :: MonadZ3 z3 => AST -> AST -> z3 AST
+mkSeqSuffix = liftFun2 Base.mkSeqSuffix
+
+mkSeqContains :: MonadZ3 z3 => AST -> AST -> z3 AST
+mkSeqContains = liftFun2 Base.mkSeqContains
+
+mkSeqReplace :: MonadZ3 z3 => AST -> AST -> AST -> z3 AST
+mkSeqReplace = liftFun3 Base.mkSeqReplace
+
+mkSeqAt :: MonadZ3 z3 => AST -> AST -> z3 AST
+mkSeqAt = liftFun2 Base.mkSeqAt
+
+mkSeqLength :: MonadZ3 z3 => AST -> z3 AST
+mkSeqLength = liftFun1 Base.mkSeqLength
+
+mkSeqIndex :: MonadZ3 z3 => AST -> AST -> AST -> z3 AST
+mkSeqIndex = liftFun3 Base.mkSeqIndex
+
+mkSeqToRe :: MonadZ3 z3 => AST -> z3 AST
+mkSeqToRe = liftFun1 Base.mkSeqToRe
+
+mkSeqInRe :: MonadZ3 z3 => AST -> AST -> z3 AST
+mkSeqInRe = liftFun2 Base.mkSeqInRe
+
+mkRePlus :: MonadZ3 z3 => AST -> z3 AST
+mkRePlus = liftFun1 Base.mkRePlus
+
+mkReStar :: MonadZ3 z3 => AST -> z3 AST
+mkReStar = liftFun1 Base.mkReStar
+
+mkReOption :: MonadZ3 z3 => AST -> z3 AST
+mkReOption = liftFun1 Base.mkReOption
+
+mkReUnion :: MonadZ3 z3 => [AST] -> z3 AST
+mkReUnion = liftFun1 Base.mkReUnion
+
+mkReConcat :: MonadZ3 z3 => [AST] -> z3 AST
+mkReConcat = liftFun1 Base.mkReConcat
 
 ---------------------------------------------------------------------
 -- Quantifiers
