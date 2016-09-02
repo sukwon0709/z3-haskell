@@ -91,7 +91,8 @@ Executable examples
     Build-depends:     base >=4.5,
                        z3 >=0.4,
                        containers,
-                       mtl >2.1
+                       mtl >2.1,
+                       transformers
   else
     Buildable:         False
 
