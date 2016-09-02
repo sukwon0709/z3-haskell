@@ -65,6 +65,7 @@ module Z3.Monad
   , mkBvSort
   , mkArraySort
   , mkTupleSort
+  , mkListSort
   , mkConstructor
   , mkDatatype
   , mkSetSort
@@ -578,6 +579,12 @@ mkTupleSort :: MonadZ3 z3
                                                -- declarations for the
                                                -- constructor and projections.
 mkTupleSort = liftFun2 Base.mkTupleSort
+
+mkListSort :: MonadZ3 z3
+           => Symbol
+           -> Sort
+           -> z3 (Sort, [FuncDecl])
+mkListSort = liftFun2 Base.mkListSort
 
 -- | Create a contructor
 --

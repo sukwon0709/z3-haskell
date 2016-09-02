@@ -103,6 +103,7 @@ module Z3.Base (
   , mkBvSort
   , mkArraySort
   , mkTupleSort
+  , mkListSort
   , mkConstructor
   , mkDatatype
   , mkSetSort
@@ -708,6 +709,34 @@ mkTupleSort c sym symSorts = withContextError c $ \cPtr ->
     projsFds <- mapM (c2h c) outProjs
     return (sort, constrFd, projsFds)
   where (syms, sorts) = unzip symSorts
+
+mkListSort :: Context
+           -> Symbol
+           -> Sort
+           -> IO (Sort, [FuncDecl])
+mkListSort c sym sort = withContextError c $ \cPtr ->
+  h2c sym $ \symPtr ->
+  h2c sort $ \sortPtr ->
+  alloca $ \outNilPtr ->
+  alloca $ \outIsNilPtr ->
+  alloca $ \outConsPtr ->
+  alloca $ \outIsConsPtr ->
+  alloca $ \outHeadPtr ->
+  alloca $ \outTailPtr -> do
+  srtPtr <- checkError cPtr $
+    z3_mk_list_sort cPtr symPtr sortPtr
+    outNilPtr outIsNilPtr
+    outConsPtr outIsConsPtr
+    outHeadPtr outTailPtr
+  outSort <- c2h c srtPtr
+  outNil <- peek outNilPtr
+  outIsNil <- peek outIsNilPtr
+  outCons <- peek outConsPtr
+  outIsCons <- peek outIsConsPtr
+  outHead <- peek outHeadPtr
+  outTail <- peek outTailPtr
+  projsFds <- mapM (c2h c) [outNil, outIsNil, outCons, outIsCons, outHead, outTail]
+  return (outSort, projsFds)
 
 -- TODO: Z3_mk_enumeration_sort
 -- TODO: Z3_mk_list_sort

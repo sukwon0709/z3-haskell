@@ -4,6 +4,8 @@ module Main where
 import qualified Example.Monad.DataTypes
 import qualified Example.Monad.FuncModel
 import qualified Example.Monad.Interpolation
+import qualified Example.Monad.List
+import qualified Example.Monad.QexExample
 import qualified Example.Monad.Queens4
 import qualified Example.Monad.Queens4All
 import qualified Example.Monad.String
@@ -36,6 +38,12 @@ examples =
     )
   , ("string"
     , Example.Monad.String.run
+    )
+  , ("qexexample"
+    , Example.Monad.QexExample.run
+    )
+  , ("list"
+    , Example.Monad.List.run
     )
   ]
 

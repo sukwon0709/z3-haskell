@@ -18,6 +18,8 @@ script = do
 
   s3 <- mkSeqConcat [s1, s2]
   assert =<< mkEq s3 =<< mkString "abcde"
+  s1Length <- mkSeqLength s1
+  assert =<< mkEq s1Length =<< (mkIntNum (2 :: Integer))
 
   (_res, mbModel) <- getModel
   case mbModel of
