@@ -53,7 +53,7 @@ Library
         Z3.Monad
 
     -- TODO: Add flag to compile with -Werror, Hackage doesn't like it.
-    ghc-options: -Wall
+    -- ghc-options: -Wall
 
     -- Ban to mtl-2.1: modify in MonadState causes <<loop>> in mtl-2.1
     Build-depends:       base >= 4.5 && <5,
@@ -111,7 +111,7 @@ Test-suite spec
 
     Type:               exitcode-stdio-1.0
 
-    Ghc-options:        -Wall
+    -- Ghc-options:        -Wall
 
     Extensions:         ScopedTypeVariables
 
