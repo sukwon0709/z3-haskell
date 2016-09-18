@@ -280,6 +280,7 @@ module Z3.Base (
 
   -- * Accessors
   , getSymbolString
+  , sortToAST
   , getBvSortSize
   , getDatatypeSortConstructors
   , getDatatypeSortRecognizers
@@ -1675,6 +1676,8 @@ getSymbolString = liftFun1 z3_get_symbol_string
 -- TODO: Z3_get_sort_id
 
 -- TODO: Z3_sort_to_ast
+sortToAST :: Context -> Sort -> IO AST
+sortToAST = liftFun1 z3_sort_to_ast
 
 -- TODO: Z3_is_eq_sort
 

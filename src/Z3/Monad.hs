@@ -242,6 +242,7 @@ module Z3.Monad
 
   -- * Accessors
   , getSymbolString
+  , sortToAST
   , getBvSortSize
   , getDatatypeSortConstructors
   , getDatatypeSortRecognizers
@@ -1473,6 +1474,9 @@ mkExists = liftFun4 Base.mkExists
 -- Reference: <http://research.microsoft.com/en-us/um/redmond/projects/z3/group__capi.html#gaf1683d9464f377e5089ce6ebf2a9bd31>
 getSymbolString :: MonadZ3 z3 => Symbol -> z3 String
 getSymbolString = liftFun1 Base.getSymbolString
+
+sortToAST :: MonadZ3 z3 => Sort -> z3 AST
+sortToAST = liftFun1 Base.sortToAST
 
 -- | Return the size of the given bit-vector sort.
 --

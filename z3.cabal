@@ -82,7 +82,7 @@ Library
 
 Flag examples
      Description: Build examples.
-     Default: False
+     Default: True
      Manual: True
 
 Executable examples
