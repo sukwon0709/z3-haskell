@@ -69,6 +69,7 @@ module Z3.Base (
   , Params
   , Solver
   , ASTKind(..)
+  , SortKind(..)
   -- ** Satisfiability result
   , Result(..)
 
@@ -281,6 +282,8 @@ module Z3.Base (
   -- * Accessors
   , getSymbolString
   , sortToAST
+  , isEqSort
+  , getSortKind
   , getBvSortSize
   , getDatatypeSortConstructors
   , getDatatypeSortRecognizers
@@ -495,6 +498,22 @@ data ASTKind
     | Z3_SORT_AST
     | Z3_FUNC_DECL_AST
     | Z3_UNKNOWN_AST
+
+data SortKind
+  = Z3_UNINTERPRETED_SORT
+  | Z3_BOOL_SORT
+  | Z3_INT_SORT
+  | Z3_REAL_SORT
+  | Z3_BV_SORT
+  | Z3_ARRAY_SORT
+  | Z3_DATATYPE_SORT
+  | Z3_RELATION_SORT
+  | Z3_FINITE_DOMAIN_SORT
+  | Z3_FLOATING_POINT_SORT
+  | Z3_ROUNDING_MODE_SORT
+  | Z3_SEQ_SORT
+  | Z3_RE_SORT
+  | Z3_UNKNOWN_SORT
 
 ---------------------------------------------------------------------
 -- * Configuration
@@ -1680,8 +1699,30 @@ sortToAST :: Context -> Sort -> IO AST
 sortToAST = liftFun1 z3_sort_to_ast
 
 -- TODO: Z3_is_eq_sort
+isEqSort :: Context -> Sort -> Sort -> IO Bool
+isEqSort = liftFun2 z3_is_eq_sort
 
 -- TODO: Z3_get_sort_kind
+getSortKind :: Context -> Sort -> IO SortKind
+getSortKind ctx sort = toSortKind <$> liftFun1 z3_get_sort_kind ctx sort
+  where toSortKind :: Z3_sort_kind -> SortKind
+        toSortKind k
+          | k == z3_uninterpreted_sort = Z3_UNINTERPRETED_SORT
+          | k == z3_bool_sort = Z3_BOOL_SORT
+          | k == z3_int_sort = Z3_INT_SORT
+          | k == z3_real_sort = Z3_REAL_SORT
+          | k == z3_bv_sort = Z3_BV_SORT
+          | k == z3_array_sort = Z3_ARRAY_SORT
+          | k == z3_datatype_sort = Z3_DATATYPE_SORT
+          | k == z3_relation_sort = Z3_RELATION_SORT
+          | k == z3_finite_domain_sort = Z3_FINITE_DOMAIN_SORT
+          | k == z3_floating_point_sort = Z3_FLOATING_POINT_SORT
+          | k == z3_rounding_mode_sort = Z3_ROUNDING_MODE_SORT
+          | k == z3_seq_sort = Z3_SEQ_SORT
+          | k == z3_re_sort = Z3_RE_SORT
+          | k == z3_unknown_sort = Z3_UNKNOWN_SORT
+          | otherwise =
+            error "Z3.Base.getSortKind: unknown `Z3_sort_kind'"
 
 -- | Return the size of the given bit-vector sort.
 getBvSortSize :: Context -> Sort -> IO Int

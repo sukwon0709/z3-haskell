@@ -42,6 +42,7 @@ module Z3.Monad
   , Params
   , Solver
   , ASTKind(..)
+  , SortKind(..)
   -- ** Satisfiability result
   , Result(..)
 
@@ -243,6 +244,8 @@ module Z3.Monad
   -- * Accessors
   , getSymbolString
   , sortToAST
+  , isEqSort
+  , getSortKind
   , getBvSortSize
   , getDatatypeSortConstructors
   , getDatatypeSortRecognizers
@@ -356,7 +359,8 @@ import           Z3.Base              (AST, ASTKind (..), ASTPrintMode (..),
                                        App, Constructor, FuncDecl, FuncEntry,
                                        FuncInterp, FuncModel (..), Logic (..),
                                        Model, Params, Pattern, Result (..),
-                                       Solver, Sort, Symbol, Version (..))
+                                       Solver, Sort, SortKind (..), Symbol,
+                                       Version (..))
 import qualified Z3.Base              as Base
 import           Z3.Opts
 
@@ -1477,6 +1481,12 @@ getSymbolString = liftFun1 Base.getSymbolString
 
 sortToAST :: MonadZ3 z3 => Sort -> z3 AST
 sortToAST = liftFun1 Base.sortToAST
+
+isEqSort :: MonadZ3 z3 => Sort -> Sort -> z3 Bool
+isEqSort = liftFun2 Base.isEqSort
+
+getSortKind :: MonadZ3 z3 => Sort -> z3 SortKind
+getSortKind = liftFun1 Base.getSortKind
 
 -- | Return the size of the given bit-vector sort.
 --
