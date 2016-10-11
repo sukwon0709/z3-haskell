@@ -22,7 +22,7 @@ module Z3.Monad
   , evalZ3
   , evalZ3With
     -- ** Z3 enviroments
-  , Z3Env
+  , Z3Env(..)
   , newEnv
   , newItpEnv
   , evalZ3WithEnv
