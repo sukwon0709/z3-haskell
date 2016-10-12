@@ -16,7 +16,7 @@
 module Z3.Monad
   ( -- * Z3 monad
     MonadZ3(..)
-  , Z3
+  , Z3(..)
   , module Z3.Opts
   , Logic(..)
   , evalZ3
