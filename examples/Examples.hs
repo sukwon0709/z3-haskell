@@ -8,6 +8,7 @@ import qualified Example.Monad.List
 import qualified Example.Monad.QexExample
 import qualified Example.Monad.Queens4
 import qualified Example.Monad.Queens4All
+import qualified Example.Monad.SMTLIB2
 import qualified Example.Monad.String
 import qualified Example.Monad.ToSMTLib
 import qualified Example.Monad.Tuple
@@ -44,6 +45,9 @@ examples =
     )
   , ("list"
     , Example.Monad.List.run
+    )
+  , ("smtlib2"
+    , Example.Monad.SMTLIB2.run
     )
   ]
 

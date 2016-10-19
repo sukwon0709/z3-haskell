@@ -343,6 +343,9 @@ module Z3.Base (
   , funcDeclToString
   , benchmarkToSMTLibString
 
+  -- * Parser Interface
+  , parseSMTLib2File
+
   -- * Error Handling
   , Z3Error(..)
   , Z3ErrorCode(..)
@@ -2278,9 +2281,23 @@ benchmarkToSMTLibString ctx name logic status attr assump form =
       f namePtr logicPtr statusPtr attrPtr assumpNum assumpArr formPtr
 
 ---------------------------------------------------------------------
--- Parser interface
+-- Parser Interface
 
--- TODO
+parseSMTLib2File :: Context
+                 -> String      -- ^ file_name
+                 -> [Symbol]    -- ^ sort names
+                 -> [Sort]      -- ^ sorts
+                 -> [Symbol]    -- ^ decl names
+                 -> [FuncDecl]  -- ^ decls
+                 -> IO AST
+parseSMTLib2File ctx fname sortNames sorts declNames decls =
+  marshal z3_parse_smtlib2_file ctx $ \f ->
+    withCString fname $ \namePtr ->
+    marshalArrayLen sortNames $ \sortNamesNum sortNamesArr ->
+    marshalArrayLen sorts $ \sortsNum sortsArr ->
+    marshalArrayLen declNames $ \declNamesNum declNamesArr ->
+    marshalArrayLen decls $ \declsNum declsArr ->
+    f namePtr sortNamesNum sortNamesArr sortsArr declNamesNum declNamesArr declsArr                              
 
 ---------------------------------------------------------------------
 -- Error handling

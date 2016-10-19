@@ -1388,6 +1388,21 @@ foreign import ccall unsafe "Z3_benchmark_to_smtlib_string"
                                       -> IO Z3_string
 
 ---------------------------------------------------------------------
+-- * Parser Interface
+
+-- | Reference: <http://z3prover.github.io/api/html/group__capi.html#ga6168be4babb03fbbccff1fa7df451300>
+foreign import ccall unsafe "Z3_parse_smtlib2_file"
+    z3_parse_smtlib2_file :: Ptr Z3_context
+                              -> Z3_string                -- ^ file_name
+                              -> CUInt                    -- ^ sorts#
+                              -> Ptr (Ptr Z3_symbol)      -- ^ sort names
+                              -> Ptr (Ptr Z3_sort)        -- ^ sorts
+                              -> CUInt                    -- ^ decls#
+                              -> Ptr (Ptr Z3_symbol)      -- ^ decl names
+                              -> Ptr (Ptr Z3_func_decl)   -- ^ decls
+                              -> IO (Ptr Z3_ast)
+
+---------------------------------------------------------------------
 -- * Error Handling
 
 -- | Reference: <http://research.microsoft.com/en-us/um/redmond/projects/z3/group__capi.html#ga8ac771e68b28d2c86f40aa84889b3807>
