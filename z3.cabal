@@ -58,6 +58,7 @@ Library
     -- Ban to mtl-2.1: modify in MonadState causes <<loop>> in mtl-2.1
     Build-depends:       base >= 4.5 && <5,
                          containers,
+                         exceptions >= 0.8.3,
                          mtl > 2.1
 
     Build-tools:         hsc2hs
@@ -91,6 +92,7 @@ Executable examples
     Build-depends:     base >=4.5,
                        z3 >=0.4,
                        containers,
+                       exceptions >= 0.8.3,
                        mtl >2.1,
                        transformers
   else

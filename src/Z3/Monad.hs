@@ -368,6 +368,7 @@ import qualified Z3.Base              as Base
 import           Z3.Opts
 
 import           Control.Applicative  (Applicative)
+import           Control.Monad.Catch
 import           Control.Monad.Fix    (MonadFix)
 import           Control.Monad.Reader (ReaderT, asks, runReaderT)
 import           Control.Monad.Trans  (MonadIO, liftIO)
@@ -454,6 +455,9 @@ data Z3Env
 instance MonadZ3 Z3 where
   getSolver  = Z3 $ asks envSolver
   getContext = Z3 $ asks envContext
+
+instance MonadThrow Z3 where
+  throwM e = Z3 $ throwM e
 
 -- | Eval a Z3 script.
 evalZ3With :: Maybe Logic -> Opts -> Z3 a -> IO a
