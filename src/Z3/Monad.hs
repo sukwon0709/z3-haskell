@@ -459,6 +459,9 @@ instance MonadZ3 Z3 where
 instance MonadThrow Z3 where
   throwM e = Z3 $ throwM e
 
+instance MonadCatch Z3 where
+  catch (Z3 e) f = Z3 $ catch e (_unZ3 . f)
+
 -- | Eval a Z3 script.
 evalZ3With :: Maybe Logic -> Opts -> Z3 a -> IO a
 evalZ3With mbLogic opts (Z3 s) = do
