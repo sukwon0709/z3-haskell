@@ -271,6 +271,7 @@ module Z3.Monad
 
   -- * Models
   , modelEval
+  , modelHasInterp
   , evalArray
   , getFuncInterp
   , isAsArray
@@ -1625,6 +1626,9 @@ modelEval :: MonadZ3 z3 => Model -> AST
              -> Bool  -- ^ Model completion?
              -> z3 (Maybe AST)
 modelEval = liftFun3 Base.modelEval
+
+modelHasInterp :: MonadZ3 z3 => Model -> FuncDecl -> z3 Bool
+modelHasInterp = liftFun2 Base.modelHasInterp
 
 -- | Get array as a list of argument/value pairs, if it is
 -- represented as a function (ie, using as-array).

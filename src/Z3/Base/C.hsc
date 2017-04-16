@@ -1083,6 +1083,12 @@ foreign import ccall unsafe "Z3_model_eval"
                   -> Ptr (Ptr Z3_ast)
                   -> IO Z3_bool
 
+foreign import ccall unsafe "Z3_model_has_interp"
+    z3_model_has_interp :: Ptr Z3_context
+                        -> Ptr Z3_model
+                        -> Ptr Z3_func_decl
+                        -> IO Z3_bool
+
 -- | Reference: <http://research.microsoft.com/en-us/um/redmond/projects/z3/group__capi.html#ga4674da67d226bfb16861829b9f129cfa>
 foreign import ccall unsafe "Z3_is_as_array"
     z3_is_as_array :: Ptr Z3_context

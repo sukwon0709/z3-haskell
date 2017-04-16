@@ -309,6 +309,7 @@ module Z3.Base (
 
   -- * Models
   , modelEval
+  , modelHasInterp
   , evalArray
   , getFuncInterp
   , isAsArray
@@ -2025,6 +2026,8 @@ modelEval ctx m a b =
 -- TODO: Z3_model_get_const_interp
 
 -- TODO: Z3_model_has_interp
+modelHasInterp :: Context -> Model -> FuncDecl -> IO Bool
+modelHasInterp = liftFun2 z3_model_has_interp
 
 -- | Evaluate an array as a function, if possible.
 evalArray :: Context -> Model -> AST -> IO (Maybe FuncModel)
