@@ -225,6 +225,8 @@ module Z3.Monad
   , mkSeqAt
   , mkSeqLength
   , mkSeqIndex
+  , mkStrToInt
+  , mkIntToStr
   , mkSeqToRe
   , mkSeqInRe
   , mkRePlus
@@ -1444,6 +1446,12 @@ mkSeqLength = liftFun1 Base.mkSeqLength
 
 mkSeqIndex :: MonadZ3 z3 => AST -> AST -> AST -> z3 AST
 mkSeqIndex = liftFun3 Base.mkSeqIndex
+
+mkStrToInt :: MonadZ3 z3 => AST -> z3 AST
+mkStrToInt = liftFun1 Base.mkStrToInt
+
+mkIntToStr :: MonadZ3 z3 => AST -> z3 AST
+mkIntToStr = liftFun1 Base.mkIntToStr
 
 mkSeqToRe :: MonadZ3 z3 => AST -> z3 AST
 mkSeqToRe = liftFun1 Base.mkSeqToRe

@@ -263,6 +263,8 @@ module Z3.Base (
   , mkSeqAt
   , mkSeqLength
   , mkSeqIndex
+  , mkStrToInt
+  , mkIntToStr
   , mkSeqToRe
   , mkSeqInRe
   , mkRePlus
@@ -1525,6 +1527,12 @@ mkSeqLength = liftFun1 z3_mk_seq_length
 
 mkSeqIndex :: Context -> AST -> AST -> AST -> IO AST
 mkSeqIndex = liftFun3 z3_mk_seq_index
+
+mkStrToInt :: Context -> AST -> IO AST
+mkStrToInt = liftFun1 z3_mk_str_to_int
+
+mkIntToStr :: Context -> AST -> IO AST
+mkIntToStr = liftFun1 z3_mk_int_to_str
 
 mkSeqToRe :: Context -> AST -> IO AST
 mkSeqToRe = liftFun1 z3_mk_seq_to_re

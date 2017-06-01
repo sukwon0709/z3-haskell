@@ -817,6 +817,12 @@ foreign import ccall unsafe "Z3_mk_seq_length"
 foreign import ccall unsafe "Z3_mk_seq_index"
     z3_mk_seq_index :: Ptr Z3_context -> Ptr Z3_ast -> Ptr Z3_ast -> Ptr Z3_ast -> IO (Ptr Z3_ast)
 
+foreign import ccall unsafe "Z3_mk_str_to_int"
+    z3_mk_str_to_int :: Ptr Z3_context -> Ptr Z3_ast -> IO (Ptr Z3_ast)
+
+foreign import ccall unsafe "Z3_mk_int_to_str"
+    z3_mk_int_to_str :: Ptr Z3_context -> Ptr Z3_ast -> IO (Ptr Z3_ast)
+
 foreign import ccall unsafe "Z3_mk_seq_to_re"
     z3_mk_seq_to_re :: Ptr Z3_context -> Ptr Z3_ast -> IO (Ptr Z3_ast)
 
