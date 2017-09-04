@@ -250,6 +250,8 @@ module Z3.Monad
   , isEqSort
   , getSortKind
   , getBvSortSize
+  , getArraySortDomain
+  , getArraySortRange
   , getDatatypeSortConstructors
   , getDatatypeSortRecognizers
   , getDeclName
@@ -1522,6 +1524,12 @@ getSortKind = liftFun1 Base.getSortKind
 -- Reference: <http://research.microsoft.com/en-us/um/redmond/projects/z3/group__capi.html#ga8fc3550edace7bc046e16d1f96ddb419>
 getBvSortSize :: MonadZ3 z3 => Sort -> z3 Int
 getBvSortSize = liftFun1 Base.getBvSortSize
+
+getArraySortDomain :: MonadZ3 z3 => Sort -> z3 Sort
+getArraySortDomain = liftFun1 Base.getArraySortDomain
+
+getArraySortRange :: MonadZ3 z3 => Sort -> z3 Sort
+getArraySortRange = liftFun1 Base.getArraySortRange
 
 -- | Get list of constructors for datatype.
 getDatatypeSortConstructors :: MonadZ3 z3

@@ -288,6 +288,8 @@ module Z3.Base (
   , isEqSort
   , getSortKind
   , getBvSortSize
+  , getArraySortDomain
+  , getArraySortRange
   , getDatatypeSortConstructors
   , getDatatypeSortRecognizers
   , getDeclName
@@ -1748,7 +1750,13 @@ getBvSortSize = liftFun1 z3_get_bv_sort_size
 
 -- TODO: Z3_get_array_sort_size
 
+getArraySortDomain :: Context -> Sort -> IO Sort
+getArraySortDomain = liftFun1 z3_get_array_sort_domain
+
 -- TODO: Z3_get_array_sort_range
+
+getArraySortRange :: Context -> Sort -> IO Sort
+getArraySortRange = liftFun1 z3_get_array_sort_range
 
 -- TODO: Z3_get_tuple_sort_mk_decl
 
