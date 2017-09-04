@@ -844,6 +844,9 @@ foreign import ccall unsafe "Z3_mk_re_union"
 foreign import ccall unsafe "Z3_mk_re_concat"
     z3_mk_re_concat :: Ptr Z3_context -> CUInt -> Ptr (Ptr Z3_ast) -> IO (Ptr Z3_ast)
 
+foreign import ccall unsafe "Z3_mk_re_range"
+    z3_mk_re_range :: Ptr Z3_context -> Ptr Z3_ast -> Ptr Z3_ast -> IO (Ptr Z3_ast)
+
 ---------------------------------------------------------------------
 -- * Quantifiers
 

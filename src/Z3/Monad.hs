@@ -234,6 +234,7 @@ module Z3.Monad
   , mkReOption
   , mkReUnion
   , mkReConcat
+  , mkReRange
 
   -- * Quantifiers
   , mkPattern
@@ -1473,6 +1474,9 @@ mkReUnion = liftFun1 Base.mkReUnion
 
 mkReConcat :: MonadZ3 z3 => [AST] -> z3 AST
 mkReConcat = liftFun1 Base.mkReConcat
+
+mkReRange :: MonadZ3 z3 => AST -> AST -> z3 AST
+mkReRange = liftFun2 Base.mkReRange
 
 ---------------------------------------------------------------------
 -- Quantifiers

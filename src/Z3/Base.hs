@@ -272,6 +272,7 @@ module Z3.Base (
   , mkReOption
   , mkReUnion
   , mkReConcat
+  , mkReRange
 
   -- * Quantifiers
   , mkPattern
@@ -1554,6 +1555,9 @@ mkReUnion = liftAstN "Z3.Base.mkReUnion: empty list of expressions" z3_mk_re_uni
 
 mkReConcat :: Context -> [AST] -> IO AST
 mkReConcat = liftAstN "Z3.Base.mkReConcat: empty list of expressions" z3_mk_re_concat
+
+mkReRange :: Context -> AST -> AST -> IO AST
+mkReRange = liftFun2 z3_mk_re_range
 
 ---------------------------------------------------------------------
 -- Quantifiers
